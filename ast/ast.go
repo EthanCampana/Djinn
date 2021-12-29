@@ -3,6 +3,7 @@ package ast
 import (
 	"bytes"
 	"djinn/token"
+	"strings"
 )
 
 //Every Node in our AST implemenets the Node interface
@@ -39,6 +40,12 @@ type PrefixExpression struct {
 	Right    Expression  `The expression to the right of the current extension`
 }
 
+type FunctionLiteral struct {
+	Token      token.Token
+	Parameters []*Identifier
+	Body       *BlockStatement
+}
+
 type InfixExpression struct {
 	Token    token.Token
 	Left     Expression
@@ -55,6 +62,23 @@ type CreateStatement struct {
 	Token token.Token // The token.Create Token
 	Name  *Identifier
 	Value Expression
+}
+
+type IfExpression struct {
+	Token       token.Token
+	Condition   Expression
+	Consequence *BlockStatement
+	Alternative *BlockStatement
+}
+
+type BlockStatement struct {
+	Token      token.Token
+	Statements []Statement
+}
+
+type Boolean struct {
+	Token token.Token
+	Value bool
 }
 
 type ExpressionStatement struct {
@@ -165,3 +189,48 @@ func (ie *InfixExpression) String() string {
 }
 
 func (ie *InfixExpression) expressionNode() {}
+
+func (b *Boolean) expressionNode()      {}
+func (b *Boolean) String() string       { return b.Token.Literal }
+func (b *Boolean) TokenLiteral() string { return b.Token.Literal }
+
+func (ie *IfExpression) expressionNode() {}
+func (ie *IfExpression) String() string {
+	var out bytes.Buffer
+	out.WriteString("if")
+	out.WriteString(ie.Condition.String())
+	out.WriteString(" ")
+	out.WriteString(ie.Consequence.String())
+	if ie.Alternative != nil {
+		out.WriteString("else ")
+		out.WriteString(ie.Alternative.String())
+	}
+	return out.String()
+}
+func (ie *IfExpression) TokenLiteral() string { return ie.Token.Literal }
+
+func (bs *BlockStatement) statementNode()       {}
+func (bs *BlockStatement) TokenLiteral() string { return bs.Token.Literal }
+func (bs *BlockStatement) String() string {
+	var out bytes.Buffer
+	for _, s := range bs.Statements {
+		out.WriteString(s.String())
+	}
+	return out.String()
+}
+
+func (fl *FunctionLiteral) expressionNode()      {}
+func (fl *FunctionLiteral) TokenLiteral() string { return fl.Token.Literal }
+func (fl *FunctionLiteral) String() string {
+	var out bytes.Buffer
+	params := []string{}
+	for _, p := range fl.Parameters {
+		params = append(params, p.String())
+	}
+	out.WriteString(fl.TokenLiteral())
+	out.WriteString("(")
+	out.WriteString(strings.Join(params, ", "))
+	out.WriteString(") ")
+	out.WriteString(fl.Body.String())
+	return out.String()
+}
