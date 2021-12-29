@@ -2,6 +2,7 @@ package repl
 
 import (
 	"bufio"
+	"djinn/colormanager"
 	"djinn/lexer"
 	"djinn/parser"
 	"fmt"
@@ -23,7 +24,7 @@ const whoops = `
 
 func Start(in io.Reader, out io.Writer) {
 	scanner := bufio.NewScanner(in)
-	// cm := colormanager.New()
+	cm := colormanager.New()
 
 	for {
 		fmt.Fprint(out, PROMPT)
@@ -39,8 +40,10 @@ func Start(in io.Reader, out io.Writer) {
 			printParserErrors(out, p.Errors())
 			continue
 		}
-		io.WriteString(out, program.String())
-		io.WriteString(out, "\n")
+		// io.WriteString(out, program.String())
+		// io.WriteString(out, "\n")
+		cm.Print(out, program.String())
+		cm.Print(out, "\n")
 
 	}
 }
