@@ -61,6 +61,12 @@ func (cm *ColorManager) SetTokenColor(t token.TokenType, c *color.Color) {
 	cm.colormap[t] = c
 }
 
+func (cm *ColorManager) PrintC(out io.Writer, line string, c *color.Color) {
+	line = c.SprintFunc()(line)
+	io.WriteString(out, line)
+
+}
+
 func (cm *ColorManager) Print(out io.Writer, line string) {
 	cm.lex = lexer.New(line)
 	str := cm.GenerateColor(cm.GenerateTokens())
