@@ -5,6 +5,7 @@ import (
 	"djinn/colormanager"
 	"djinn/evaluator"
 	"djinn/lexer"
+	"djinn/object"
 	"djinn/parser"
 	"fmt"
 	"io"
@@ -28,6 +29,7 @@ const whoops = `
 func Start(in io.Reader, out io.Writer) {
 	scanner := bufio.NewScanner(in)
 	cm := colormanager.New()
+	env := object.NewEnviroment()
 
 	for {
 		fmt.Fprint(out, PROMPT)
@@ -43,7 +45,7 @@ func Start(in io.Reader, out io.Writer) {
 			printParserErrors(out, p.Errors(), cm)
 			continue
 		}
-		evaluated := evaluator.Eval(program)
+		evaluated := evaluator.Eval(program, env)
 		if evaluated != nil {
 			cm.Print(out, evaluated.Inspect())
 			cm.Print(out, "\n")
