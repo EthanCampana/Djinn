@@ -2,10 +2,15 @@ package repl
 
 import (
 	"bufio"
+	"djinn/colormanager"
+	"djinn/evaluator"
 	"djinn/lexer"
+	"djinn/object"
 	"djinn/parser"
 	"fmt"
 	"io"
+
+	"github.com/fatih/color"
 )
 
 const PROMPT = ">> "
@@ -23,7 +28,8 @@ const whoops = `
 
 func Start(in io.Reader, out io.Writer) {
 	scanner := bufio.NewScanner(in)
-	// cm := colormanager.New()
+	cm := colormanager.New()
+	env := object.NewEnviroment()
 
 	for {
 		fmt.Fprint(out, PROMPT)
@@ -36,19 +42,23 @@ func Start(in io.Reader, out io.Writer) {
 		p := parser.New(l)
 		program := p.ParseProgram()
 		if len(p.Errors()) != 0 {
-			printParserErrors(out, p.Errors())
+			printParserErrors(out, p.Errors(), cm)
 			continue
 		}
-		io.WriteString(out, program.String())
-		io.WriteString(out, "\n")
+		evaluated := evaluator.Eval(program, env)
+		if evaluated != nil {
+			cm.Print(out, evaluated.Inspect())
+			cm.Print(out, "\n")
+		}
 
 	}
 }
 
-func printParserErrors(out io.Writer, errors []string) {
-	io.WriteString(out, whoops)
+func printParserErrors(out io.Writer, errors []string, cm *colormanager.ColorManager) {
+	// io.WriteString(out, whoops)
+	cm.PrintC(out, whoops, color.New(color.FgHiYellow))
 	for _, msg := range errors {
-		io.WriteString(out, "\t"+msg+"\n")
+		cm.PrintC(out, "\t"+msg+"\n", color.New(color.FgHiRed))
 	}
 
 }

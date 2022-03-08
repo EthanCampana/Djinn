@@ -1,8 +1,10 @@
 package colormanager
 
 import (
+	"djinn/lexer"
 	"djinn/token"
 	"fmt"
+	"io"
 
 	"github.com/fatih/color"
 )
@@ -10,6 +12,7 @@ import (
 type ColorManager struct {
 	colormap  map[token.TokenType]*color.Color
 	c_default *color.Color
+	lex       *lexer.Lexer
 }
 
 // This will have to get refactored at some point but idk when yet
@@ -35,9 +38,19 @@ func New() *ColorManager {
 		token.ELSE:     color.New(color.FgRed),
 		token.CREATE:   color.New(color.FgYellow),
 	}
+	line := ""
+	l := lexer.New(line)
+	cm := &ColorManager{colormap: m, c_default: color.New(color.FgWhite), lex: l}
 
-	cm := &ColorManager{colormap: m, c_default: color.New(color.FgWhite)}
 	return cm
+}
+
+func (cm *ColorManager) GenerateTokens() []token.Token {
+	toks := []token.Token{}
+	for tok := cm.lex.NextToken(); tok.Type != token.EOF; tok = cm.lex.NextToken() {
+		toks = append(toks, tok)
+	}
+	return toks
 }
 
 func (cm *ColorManager) SetDefaultColor(c *color.Color) {
@@ -46,6 +59,18 @@ func (cm *ColorManager) SetDefaultColor(c *color.Color) {
 
 func (cm *ColorManager) SetTokenColor(t token.TokenType, c *color.Color) {
 	cm.colormap[t] = c
+}
+
+func (cm *ColorManager) PrintC(out io.Writer, line string, c *color.Color) {
+	line = c.SprintFunc()(line)
+	io.WriteString(out, line)
+
+}
+
+func (cm *ColorManager) Print(out io.Writer, line string) {
+	cm.lex = lexer.New(line)
+	str := cm.GenerateColor(cm.GenerateTokens())
+	io.WriteString(out, str)
 }
 
 func (cm *ColorManager) GenerateColor(x []token.Token) string {
