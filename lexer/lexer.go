@@ -37,6 +37,7 @@ func (l *Lexer) NextToken() token.Token {
 	var tok token.Token
 	l.skipWhitespace()
 	switch l.char {
+
 	default:
 		if isLetter(l.char) {
 			tok.Literal = l.readIdentifier()
@@ -49,6 +50,9 @@ func (l *Lexer) NextToken() token.Token {
 		} else {
 			tok = newToken(token.ILLEGAL, l.char)
 		}
+	case '"':
+		tok.Type = token.STRING
+		tok.Literal = l.readString()
 	case '=':
 		if l.peakChar() == '=' {
 			temp_tok := l.char
@@ -99,6 +103,20 @@ func (l *Lexer) NextToken() token.Token {
 	l.readChar()
 	return tok
 
+}
+
+// Builds the String to put it into the token literal 
+func (l *Lexer) readString() string  {
+
+	position := l.position + 1
+	for{
+		l.readChar()
+		if l.char == '"' || l.char == 0 {
+			break
+		}
+	}
+	return l.input[position:l.position]
+	
 }
 
 func (l *Lexer) readIdentifier() string {

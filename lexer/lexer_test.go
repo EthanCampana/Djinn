@@ -13,6 +13,8 @@ func TestNextToken(t *testing.T) {
 		mu x
 	};
 	input = add_two(input)	
+	"foobar"
+	"foo bar"
 	`
 	tests := []struct {
 		expectedType    token.TokenType
@@ -44,6 +46,9 @@ func TestNextToken(t *testing.T) {
 		{token.LPAREN, "("},
 		{token.IDENT, "input"},
 		{token.RPAREN, ")"},
+		{token.STRING, "foobar"},
+		{token.STRING, "foo bar"},
+		{token.EOF, ""},
 	}
 	l := New(input)
 	for i, tt := range tests {

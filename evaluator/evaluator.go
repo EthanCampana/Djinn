@@ -48,6 +48,8 @@ func Eval(node ast.Node, env *object.Enviroment) object.Object {
 	//evaluate the Boolean Expressions
 	case *ast.Boolean:
 		return nativeBoolToBooleanObject(node.Value)
+	case *ast.StringLiteral:
+		return &object.String{Value: node.Value}
 	//Evaluate the Integersk
 	case *ast.IntegerLiteral:
 		return &object.Integer{Value: node.Value}
@@ -155,6 +157,8 @@ func isTruthy(obj object.Object) bool {
 
 func evalInfixExpression(operator string, left, right object.Object) object.Object {
 	switch {
+	case left.Type() == object.STRING_OBJ && right.Type() == object.STRING_OBJ:
+		return evalStringInfixExperession(operator, left, right)
 	case left.Type() == object.INTEGER_OBJ && right.Type() == object.INTEGER_OBJ:
 		return evalIntegerInfixExpression(operator, left, right)
 	case operator == "==":
@@ -274,5 +278,15 @@ func isError(obj object.Object) bool {
 		return obj.Type() == object.ERROR_OBJ
 	}
 	return false
+
+}
+
+func evalStringInfixExperession(operator string, left, right object.Object) object.Object {
+	if operator != "+" {
+		return NewError("unkown operator: %s %s %s", left.Type(), operator, right.Type())
+	}
+	leftVal := left.(*object.String).Value
+	rightVal := right.(*object.String).Value
+	return &object.String{Value: leftVal + rightVal}
 
 }
