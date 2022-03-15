@@ -98,7 +98,12 @@ func (l *Lexer) NextToken() token.Token {
 		tok = newToken(token.SLASH, l.char)
 	case 0:
 		tok = newToken(token.EOF, l.char)
+	case '[':
+		tok = newToken(token.LBRACKET,l.char)
+	case ']':
+		tok = newToken(token.RBRACKET,l.char)
 	}
+
 	//After we get the token we want to increment the read position to the next token to read
 	l.readChar()
 	return tok

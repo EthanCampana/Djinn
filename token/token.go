@@ -31,6 +31,8 @@ const (
 	RPAREN = ")"
 	LBRACE = "{"
 	RBRACE = "}"
+	LBRACKET = "["
+	RBRACKET = "]"
 
 	TRUE   = "TRUE"
 	FALSE  = "FALSE"

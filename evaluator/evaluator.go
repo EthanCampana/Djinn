@@ -12,6 +12,7 @@ var (
 	FALSE = &object.Boolean{Value: false}
 )
 
+//Evaluates the program and creates objects from ast nodes. Basically where all the magic happens in terms of the enviroment
 func Eval(node ast.Node, env *object.Enviroment) object.Object {
 	switch node := node.(type) {
 	//We must start from the head of the ast
@@ -79,18 +80,28 @@ func Eval(node ast.Node, env *object.Enviroment) object.Object {
 			return args[0]
 		}
 		return applyFunction(function, args)
+	case *ast.ArrayLiteral:
+		elements := evalExpressions(node.Elements, env)
+		if len(elements) == 1 && isError(elements[0]) {
+			return elements[0]
+		}
+		return &object.Array{Elements: elements}
 	}
 	return nil
 }
 
 func applyFunction(fn object.Object, args []object.Object) object.Object {
-	function, ok := fn.(*object.Function)
-	if !ok {
+	switch fn := fn.(type) {
+
+	case *object.Function:
+		extendedEnv := extendedFunctionEnv(fn, args)
+		evaluated := Eval(fn.Body, extendedEnv)
+		return unwrapReturnValue(evaluated)
+	case *object.Builtin:
+		return fn.Fn(args...)
+	default:
 		return NewError("not a function: %s", fn.Type())
 	}
-	extendedEnv := extendedFunctionEnv(function, args)
-	evaluated := Eval(function.Body, extendedEnv)
-	return unwrapReturnValue(evaluated)
 }
 
 func extendedFunctionEnv(fn *object.Function, args []object.Object) *object.Enviroment {
@@ -121,11 +132,14 @@ func evalExpressions(exps []ast.Expression, env *object.Enviroment) []object.Obj
 }
 
 func evalIdentifier(node *ast.Identifier, env *object.Enviroment) object.Object {
-	val, ok := env.Get(node.Value)
-	if !ok {
-		return NewError("identifier not found: " + node.Value)
+	if val, ok := env.Get(node.Value); ok {
+		return val
 	}
-	return val
+	if builtin, ok := builtins[node.Value]; ok {
+		return builtin
+	}
+	return NewError("identifier not found: " + node.Value)
+
 }
 
 func evalIfExpression(ie *ast.IfExpression, env *object.Enviroment) object.Object {
