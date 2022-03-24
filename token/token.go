@@ -8,8 +8,8 @@ const (
 	ILLEGAL = "ILLEGAL"
 	EOF     = "EOF"
 
-	IDENT = "IDENT"
-	INT   = "INT"
+	IDENT  = "IDENT"
+	INT    = "INT"
 	STRING = "STRING"
 
 	ASSIGN   = "="
@@ -27,10 +27,10 @@ const (
 	SEMICOLON = ";"
 	COMMA     = ","
 
-	LPAREN = "("
-	RPAREN = ")"
-	LBRACE = "{"
-	RBRACE = "}"
+	LPAREN   = "("
+	RPAREN   = ")"
+	LBRACE   = "{"
+	RBRACE   = "}"
 	LBRACKET = "["
 	RBRACKET = "]"
 
@@ -39,6 +39,7 @@ const (
 	IF     = "IF"
 	ELSE   = "ELSE"
 	RETURN = "RETURN"
+	COLON  = ":"
 
 	FUNCTION = "FUNCTION"
 	CREATE   = "CREATE"

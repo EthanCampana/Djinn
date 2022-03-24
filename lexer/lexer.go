@@ -99,9 +99,11 @@ func (l *Lexer) NextToken() token.Token {
 	case 0:
 		tok = newToken(token.EOF, l.char)
 	case '[':
-		tok = newToken(token.LBRACKET,l.char)
+		tok = newToken(token.LBRACKET, l.char)
 	case ']':
-		tok = newToken(token.RBRACKET,l.char)
+		tok = newToken(token.RBRACKET, l.char)
+	case ':':
+		tok = newToken(token.COLON, l.char)
 	}
 
 	//After we get the token we want to increment the read position to the next token to read
@@ -110,18 +112,18 @@ func (l *Lexer) NextToken() token.Token {
 
 }
 
-// Builds the String to put it into the token literal 
-func (l *Lexer) readString() string  {
+// Builds the String to put it into the token literal
+func (l *Lexer) readString() string {
 
 	position := l.position + 1
-	for{
+	for {
 		l.readChar()
 		if l.char == '"' || l.char == 0 {
 			break
 		}
 	}
 	return l.input[position:l.position]
-	
+
 }
 
 func (l *Lexer) readIdentifier() string {
