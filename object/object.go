@@ -21,6 +21,7 @@ const (
 	BUILTIN_OBJ      = "BUILTIN"
 	ARRAY_OBJ        = "ARRAY"
 	HASH_OBJ         = "HASH"
+	QOUTE_OBJ        = "QUOTE"
 )
 
 type Function struct {
@@ -212,4 +213,13 @@ func (h *Hash) Inspect() string {
 // Makes it easier to determine what objects/datatypes are hashable
 type Hashable interface {
 	HashKey() HashKey
+}
+
+type Quote struct {
+	Node ast.Node
+}
+
+func (q *Quote) Type() ObjectType { return QOUTE_OBJ }
+func (q *Quote) Inspect() string {
+	return "QUOTE(" + q.Node.String() + ")"
 }
