@@ -30,6 +30,7 @@ func Start(in io.Reader, out io.Writer) {
 	scanner := bufio.NewScanner(in)
 	cm := colormanager.New()
 	env := object.NewEnviroment()
+	macroEnv := object.NewEnviroment()
 
 	for {
 		fmt.Fprint(out, PROMPT)
@@ -45,7 +46,9 @@ func Start(in io.Reader, out io.Writer) {
 			printParserErrors(out, p.Errors(), cm)
 			continue
 		}
-		evaluated := evaluator.Eval(program, env)
+		evaluator.DefineMacros(program, macroEnv)
+		expanded := evaluator.ExpandMacros(program, macroEnv)
+		evaluated := evaluator.Eval(expanded, env)
 		if evaluated != nil {
 			cm.Print(out, evaluated.Inspect())
 			cm.Print(out, "\n")

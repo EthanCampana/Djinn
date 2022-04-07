@@ -41,6 +41,7 @@ const (
 	RETURN = "RETURN"
 	COLON  = ":"
 
+	MACRO    = "MACRO"
 	FUNCTION = "FUNCTION"
 	CREATE   = "CREATE"
 	MUTE     = "MUTE"
@@ -60,6 +61,7 @@ var keywords = map[string]TokenType{
 	"return": RETURN,
 	"true":   TRUE,
 	"false":  FALSE,
+	"macro":  MACRO,
 }
 
 //Lookups if the string is a keyword that maps to another Token if not we return the IDENT Token

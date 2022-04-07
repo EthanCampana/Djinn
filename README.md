@@ -1,6 +1,27 @@
 # DJINN
-Djinn is a programming language built on top of Go!
-It consists of a Compiler, Interpreter and Its Own REPL for interfacing with it.
-Based on the books:
-Building an Interpreter in GO and Building an Compiler in GO by Thorsten Ball
+Djinn is a Interpreter built on top of Go!
+Its Also Has its own REPL for interfacing with it.
+
+## How To Use
+ Clone the repository
+```bash
+go run main.go
+```
+To start the Repl
+
+## Features
+Djinn Supports the following
+- Strings
+- Integers
+- Arrays
+- Hashes / Maps
+- Functions
+- Built-In Functions
+- Macros
+- A repl in COLOR
+
+## Source
+I used the following books to help write Djinn
+Building an Interpreter in GO by Thorsten Ball
+Building an Interpreter in GO: Lost Chapters by Thorsten Ball
 
