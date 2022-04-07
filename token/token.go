@@ -8,8 +8,9 @@ const (
 	ILLEGAL = "ILLEGAL"
 	EOF     = "EOF"
 
-	IDENT = "IDENT"
-	INT   = "INT"
+	IDENT  = "IDENT"
+	INT    = "INT"
+	STRING = "STRING"
 
 	ASSIGN   = "="
 	PLUS     = "+"
@@ -26,17 +27,21 @@ const (
 	SEMICOLON = ";"
 	COMMA     = ","
 
-	LPAREN = "("
-	RPAREN = ")"
-	LBRACE = "{"
-	RBRACE = "}"
+	LPAREN   = "("
+	RPAREN   = ")"
+	LBRACE   = "{"
+	RBRACE   = "}"
+	LBRACKET = "["
+	RBRACKET = "]"
 
 	TRUE   = "TRUE"
 	FALSE  = "FALSE"
 	IF     = "IF"
 	ELSE   = "ELSE"
 	RETURN = "RETURN"
+	COLON  = ":"
 
+	MACRO    = "MACRO"
 	FUNCTION = "FUNCTION"
 	CREATE   = "CREATE"
 	MUTE     = "MUTE"
@@ -56,6 +61,7 @@ var keywords = map[string]TokenType{
 	"return": RETURN,
 	"true":   TRUE,
 	"false":  FALSE,
+	"macro":  MACRO,
 }
 
 //Lookups if the string is a keyword that maps to another Token if not we return the IDENT Token
