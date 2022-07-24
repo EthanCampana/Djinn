@@ -9,6 +9,38 @@ go run main.go
 ```
 To start the Repl
 
+
+## Syntax
+Semincolons at the end of statements are not necessary but can be added
+
+Create a variable
+```bash
+cr x
+```
+or
+```bash
+cr x = 10
+```
+
+Create a function
+``bash
+fn foo(){
+print("bar)
+}
+```
+
+If / Esle
+```bash
+if x < 0 {} else {}
+```
+#Boolean Operators
+Djinn supports all boolean operators
+
+```
+== != => <=
+```
+
+
 ## Features
 Djinn Supports the following
 - Strings
