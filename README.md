@@ -13,7 +13,7 @@ To start the Repl
 ## Syntax
 Semincolons at the end of statements are not necessary but can be added
 
-###Create a variable
+Create a variable
 ```bash
 cr x
 ```
@@ -23,18 +23,18 @@ or
 cr x = 10
 ```
 
-###Create a function
+Create a function
 
 ```bash
 fn foo(){print("bar")}
 ```
 
-###If / Esle
+If / Esle
 ```bash
 if x < 0 {} else {}
 ```
 
-###Boolean Operators
+Boolean Operators
 Djinn supports all boolean operators
 
 ```
