@@ -173,3 +173,4 @@ func (l *Lexer) peakChar() byte {
 		return l.input[l.readPosition]
 	}
 }
+	
